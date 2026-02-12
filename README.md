@@ -59,7 +59,7 @@ Vaudio uses `media_kit` as its audio backend on Linux, which relies on the `libm
 
 1.  **Clone the Repository**:
     ```bash
-    git clone https://github.com/yourusername/vaudio.git
+    git clone https://github.com/VAXPAPPS/vaudio.git
     cd vaudio
     ```
 
