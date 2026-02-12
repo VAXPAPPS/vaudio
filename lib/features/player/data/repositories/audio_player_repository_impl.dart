@@ -54,6 +54,9 @@ class AudioPlayerRepositoryImpl implements AudioPlayerRepository {
   Stream<bool> get playingStream => _dataSource.playingStream;
 
   @override
+  Stream<void> get completeStream => _dataSource.completeStream;
+
+  @override
   Future<void> dispose() async {
     await _dataSource.dispose();
   }

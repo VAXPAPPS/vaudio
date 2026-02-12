@@ -38,6 +38,7 @@ class PlayerBloc extends Bloc<PlayerEvent, ps.PlayerState> {
     on<NextRequested>(_onNextRequested);
     on<PreviousRequested>(_onPreviousRequested);
     on<QueueSet>(_onQueueSet);
+    on<PlaybackCompleted>(_onPlaybackCompleted);
 
     _listenToStreams();
   }
@@ -52,13 +53,17 @@ class PlayerBloc extends Bloc<PlayerEvent, ps.PlayerState> {
     _playingSub = repository.playingStream.listen((playing) {
       add(PlayingStateUpdated(playing));
     });
+    repository.completeStream.listen((_) {
+      if (!isClosed) add(PlaybackCompleted());
+    });
+  }
+
+  Future<void> _onPlaybackCompleted(PlaybackCompleted event, Emitter<ps.PlayerState> emit) async {
+    await _handleTrackEnd(emit);
   }
 
   Future<void> _onPlayRequested(PlayRequested event, Emitter<ps.PlayerState> emit) async {
     try {
-      await repository.play(event.track);
-
-      // إذا تم تشغيل مسار فردي بدون قائمة
       if (_queue.isEmpty || !_queue.contains(event.track)) {
         _queue = [event.track];
         _originalQueue = [event.track];
@@ -69,10 +74,15 @@ class PlayerBloc extends Bloc<PlayerEvent, ps.PlayerState> {
 
       emit(ps.PlayerActive(
         currentTrack: event.track,
-        playbackState: const PlaybackState(isPlaying: true),
+        playbackState: const PlaybackState(
+            isPlaying: false,
+            duration: Duration.zero,
+            position: Duration.zero),
         queue: _queue,
         currentIndex: _currentIndex,
       ));
+
+      await repository.play(event.track);
     } catch (e) {
       emit(ps.PlayerError(e.toString()));
     }
@@ -179,7 +189,6 @@ class PlayerBloc extends Bloc<PlayerEvent, ps.PlayerState> {
       if (isShuffled) {
         _originalQueue = List.from(_queue);
         _queue = List.from(_queue)..shuffle(Random());
-        // اجعل المسار الحالي في البداية
         final currentTrack = activeState.currentTrack;
         _queue.remove(currentTrack);
         _queue.insert(0, currentTrack);
@@ -200,14 +209,7 @@ class PlayerBloc extends Bloc<PlayerEvent, ps.PlayerState> {
   void _onPositionUpdated(PositionUpdated event, Emitter<ps.PlayerState> emit) {
     if (state is ps.PlayerActive) {
       final activeState = state as ps.PlayerActive;
-      final duration = activeState.playbackState.duration;
-
-      // كشف انتهاء المسار
-      if (duration > Duration.zero && event.position >= duration) {
-        _handleTrackEnd(emit);
-        return;
-      }
-
+      
       emit(activeState.copyWith(
         playbackState: activeState.playbackState.copyWith(position: event.position),
       ));
@@ -283,14 +285,14 @@ class PlayerBloc extends Bloc<PlayerEvent, ps.PlayerState> {
     }
   }
 
-  void _handleTrackEnd(Emitter<ps.PlayerState> emit) {
+  Future<void> _handleTrackEnd(Emitter<ps.PlayerState> emit) async {
     if (state is ps.PlayerActive) {
       final activeState = state as ps.PlayerActive;
       final repeatMode = activeState.playbackState.repeatMode;
 
       if (repeatMode == RepeatMode.one) {
-        repository.seek(Duration.zero);
-        repository.resume();
+        await repository.seek(Duration.zero);
+        await repository.resume();
       } else if (_currentIndex < _queue.length - 1) {
         add(NextRequested());
       } else if (repeatMode == RepeatMode.all) {

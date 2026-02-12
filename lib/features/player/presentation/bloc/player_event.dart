@@ -97,6 +97,8 @@ class NextRequested extends PlayerEvent {}
 class PreviousRequested extends PlayerEvent {}
 
 /// تعيين قائمة انتظار
+class PlaybackCompleted extends PlayerEvent {}
+
 class QueueSet extends PlayerEvent {
   final List<AudioTrack> tracks;
   final int startIndex;

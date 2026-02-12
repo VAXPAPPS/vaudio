@@ -53,6 +53,11 @@ class AudioPlayerDataSource {
   /// stream حالة المُشغّل (لرصد انتهاء المسار)
   Stream<PlayerState> get playerStateStream => _player.playerStateStream;
 
+  /// stream عند اكتمال المسار
+  Stream<void> get completeStream => _player.playerStateStream
+      .where((state) => state.processingState == ProcessingState.completed)
+      .map((_) => null);
+
   /// التخلص من الموارد
   Future<void> dispose() async {
     await _player.dispose();

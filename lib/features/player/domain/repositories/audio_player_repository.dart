@@ -32,6 +32,9 @@ abstract class AudioPlayerRepository {
   /// الحصول على stream حالة المُشغّل
   Stream<bool> get playingStream;
 
+  /// stream اكتمال المسار
+  Stream<void> get completeStream;
+
   /// التخلص من الموارد
   Future<void> dispose();
 }
