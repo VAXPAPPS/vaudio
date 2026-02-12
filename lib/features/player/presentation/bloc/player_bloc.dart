@@ -75,7 +75,7 @@ class PlayerBloc extends Bloc<PlayerEvent, ps.PlayerState> {
       emit(ps.PlayerActive(
         currentTrack: event.track,
         playbackState: const PlaybackState(
-            isPlaying: false,
+            isPlaying: true, // Optimistically set to true
             duration: Duration.zero,
             position: Duration.zero),
         queue: _queue,

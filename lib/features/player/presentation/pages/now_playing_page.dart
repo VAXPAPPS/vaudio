@@ -6,6 +6,7 @@ import '../bloc/player_bloc.dart';
 import '../bloc/player_event.dart';
 import '../bloc/player_state.dart' as ps;
 import '../../domain/entities/playback_state.dart';
+import '../widgets/ambient_visualizer.dart';
 
 /// صفحة Now Playing الكاملة
 class NowPlayingPage extends StatelessWidget {
@@ -121,29 +122,32 @@ class _AlbumArt extends StatelessWidget {
           child: child,
         );
       },
-      child: VaxpGlass(
-        radius: BorderRadius.circular(24),
-        opacity: 0.15,
-        child: Container(
-          width: 220,
-          height: 220,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                VaxpColors.secondary.withOpacity(0.3),
-                VaxpColors.primary.withOpacity(0.5),
-                Colors.purple.withOpacity(0.2),
-              ],
+      child: AmbientVisualizer(
+        isPlaying: isPlaying,
+        child: VaxpGlass(
+          radius: BorderRadius.circular(110),
+          opacity: 0.15,
+          child: Container(
+            width: 220,
+            height: 220,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  VaxpColors.secondary.withOpacity(0.3),
+                  VaxpColors.primary.withOpacity(0.5),
+                  Colors.purple.withOpacity(0.2),
+                ],
+              ),
             ),
-          ),
-          child: const Center(
-            child: Icon(
-              Icons.music_note_rounded,
-              size: 80,
-              color: Colors.white54,
+            child: const Center(
+              child: Icon(
+                Icons.music_note_rounded,
+                size: 80,
+                color: Colors.white54,
+              ),
             ),
           ),
         ),
