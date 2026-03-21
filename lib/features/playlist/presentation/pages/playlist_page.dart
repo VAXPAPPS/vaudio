@@ -60,7 +60,7 @@ class PlaylistPage extends StatelessWidget {
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: VaxpColors.secondary.withOpacity(0.2),
+                        color: VaxpColors.secondary.withValues(alpha: 0.2),
                       ),
                       child: const Icon(Icons.add_rounded, size: 20),
                     ),
@@ -81,13 +81,13 @@ class PlaylistPage extends StatelessWidget {
                           Icon(
                             Icons.library_music_rounded,
                             size: 64,
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withValues(alpha: 0.1),
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'No playlists yet',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               fontSize: 16,
                             ),
                           ),
@@ -95,7 +95,7 @@ class PlaylistPage extends StatelessWidget {
                           Text(
                             'Create one to organize your music',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               fontSize: 13,
                             ),
                           ),
@@ -175,7 +175,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white.withOpacity(0.04),
+        color: Colors.white.withValues(alpha: 0.04),
       ),
       child: Column(
         children: [
@@ -195,8 +195,8 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                       borderRadius: BorderRadius.circular(10),
                       gradient: LinearGradient(
                         colors: [
-                          VaxpColors.secondary.withOpacity(0.3),
-                          Colors.purple.withOpacity(0.2),
+                          VaxpColors.secondary.withValues(alpha: 0.3),
+                          Colors.purple.withValues(alpha: 0.2),
                         ],
                       ),
                     ),
@@ -222,7 +222,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                           '${widget.playlist.tracks.length} tracks',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white.withOpacity(0.4),
+                            color: Colors.white.withValues(alpha: 0.4),
                           ),
                         ),
                       ],
@@ -249,7 +249,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                     icon: Icon(
                       Icons.delete_outline_rounded,
                       size: 20,
-                      color: Colors.red.withOpacity(0.5),
+                      color: Colors.red.withValues(alpha: 0.5),
                     ),
                     onPressed: () {
                       context.read<PlaylistBloc>().add(
@@ -264,7 +264,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                     _isExpanded
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                   ),
                 ],
               ),
@@ -278,7 +278,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                 children: [
                   Divider(
                     height: 1,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                   ),
                   ...List.generate(widget.playlist.tracks.length, (i) {
                     final track = widget.playlist.tracks[i];
@@ -287,7 +287,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                       leading: Text(
                         '${i + 1}',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           fontSize: 13,
                         ),
                       ),
@@ -300,7 +300,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                         track.artist,
                         style: TextStyle(
                           fontSize: 11,
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                         ),
                       ),
                       trailing: Row(
@@ -319,7 +319,7 @@ class _PlaylistTileState extends State<_PlaylistTile> {
                             icon: Icon(
                               Icons.remove_circle_outline_rounded,
                               size: 18,
-                              color: Colors.red.withOpacity(0.4),
+                              color: Colors.red.withValues(alpha: 0.4),
                             ),
                             onPressed: () {
                               context.read<PlaylistBloc>().add(

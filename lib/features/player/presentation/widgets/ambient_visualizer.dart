@@ -82,7 +82,7 @@ class _VisualizerPainter extends CustomPainter {
     // We want waves OUTSIDE the child.
     
     final paint = Paint()
-      ..color = color.withOpacity(0.3)
+      ..color = color.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
@@ -128,7 +128,7 @@ class _VisualizerPainter extends CustomPainter {
     path.close();
     
     // Fade out outer waves or just random opacity?
-    basePaint.color = color.withOpacity(0.4 / (waveIndex + 1));
+    basePaint.color = color.withValues(alpha: 0.4 / (waveIndex + 1));
     basePaint.strokeWidth = 3.0 - waveIndex; 
     
     canvas.drawPath(path, basePaint);

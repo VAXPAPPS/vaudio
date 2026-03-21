@@ -75,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.white.withOpacity(0.04),
+              color: Colors.white.withValues(alpha: 0.04),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   'Version 0.1.0',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -100,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   'Part of the VAXP Ecosystem',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                   ),
                 ),
               ],
@@ -152,11 +152,11 @@ class _ColorPickerTile extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white.withOpacity(0.04),
+        color: Colors.white.withValues(alpha: 0.04),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 22, color: Colors.white.withOpacity(0.6)),
+          Icon(icon, size: 22, color: Colors.white.withValues(alpha: 0.6)),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -173,7 +173,7 @@ class _ColorPickerTile extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                   ),
                 ),
               ],
@@ -187,7 +187,7 @@ class _ColorPickerTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               color: _parseColor(currentHex),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
               ),
             ),
           ),
@@ -219,9 +219,9 @@ class _ShortcutInfo extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              color: Colors.white.withOpacity(0.08),
+              color: Colors.white.withValues(alpha: 0.08),
               border: Border.all(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
             child: Text(
@@ -238,7 +238,7 @@ class _ShortcutInfo extends StatelessWidget {
             action,
             style: TextStyle(
               fontSize: 13,
-              color: Colors.white.withOpacity(0.6),
+              color: Colors.white.withValues(alpha: 0.6),
             ),
           ),
         ],

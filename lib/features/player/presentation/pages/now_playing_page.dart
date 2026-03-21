@@ -24,14 +24,14 @@ class NowPlayingPage extends StatelessWidget {
                 Icon(
                   Icons.headphones_rounded,
                   size: 80,
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
                 const SizedBox(height: 24),
                 Text(
                   'No track playing',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -40,7 +40,7 @@ class NowPlayingPage extends StatelessWidget {
                   'Browse files to start playing',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                   ),
                 ),
               ],
@@ -75,7 +75,7 @@ class NowPlayingPage extends StatelessWidget {
                 track.artist,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                 ),
               ),
               const SizedBox(height: 32),
@@ -94,7 +94,7 @@ class NowPlayingPage extends StatelessWidget {
                   'Track ${state.currentIndex + 1} of ${state.queue.length}',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                   ),
                 ),
             ],
@@ -136,9 +136,9 @@ class _AlbumArt extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  VaxpColors.secondary.withOpacity(0.3),
-                  VaxpColors.primary.withOpacity(0.5),
-                  Colors.purple.withOpacity(0.2),
+                  VaxpColors.secondary.withValues(alpha: 0.3),
+                  VaxpColors.primary.withValues(alpha: 0.5),
+                  Colors.purple.withValues(alpha: 0.2),
                 ],
               ),
             ),
@@ -176,7 +176,7 @@ class _FullSeekBar extends StatelessWidget {
             thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
             activeTrackColor: VaxpColors.secondary,
-            inactiveTrackColor: Colors.white.withOpacity(0.08),
+            inactiveTrackColor: Colors.white.withValues(alpha: 0.08),
             thumbColor: VaxpColors.secondary,
           ),
           child: Slider(
@@ -198,7 +198,7 @@ class _FullSeekBar extends StatelessWidget {
                 _formatDuration(playback.position),
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.4),
+                  color: Colors.white.withValues(alpha: 0.4),
                   fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
@@ -206,7 +206,7 @@ class _FullSeekBar extends StatelessWidget {
                 _formatDuration(playback.duration),
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.white.withOpacity(0.4),
+                  color: Colors.white.withValues(alpha: 0.4),
                   fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
@@ -243,7 +243,7 @@ class _LargeControls extends StatelessWidget {
             size: 22,
             color: playback.isShuffled
                 ? VaxpColors.secondary
-                : Colors.white.withOpacity(0.4),
+                : Colors.white.withValues(alpha: 0.4),
           ),
           onPressed: () => bloc.add(ShuffleToggled()),
           splashRadius: 22,
@@ -275,12 +275,12 @@ class _LargeControls extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [
                   VaxpColors.secondary,
-                  VaxpColors.secondary.withOpacity(0.6),
+                  VaxpColors.secondary.withValues(alpha: 0.6),
                 ],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: VaxpColors.secondary.withOpacity(0.3),
+                  color: VaxpColors.secondary.withValues(alpha: 0.3),
                   blurRadius: 16,
                   spreadRadius: 2,
                 ),
@@ -312,7 +312,7 @@ class _LargeControls extends StatelessWidget {
             size: 22,
             color: playback.repeatMode != RepeatMode.off
                 ? VaxpColors.secondary
-                : Colors.white.withOpacity(0.4),
+                : Colors.white.withValues(alpha: 0.4),
           ),
           onPressed: () => bloc.add(RepeatModeChanged()),
           splashRadius: 22,
@@ -340,7 +340,7 @@ class _SpeedControl extends StatelessWidget {
           'Speed',
           style: TextStyle(
             fontSize: 12,
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha: 0.4),
           ),
         ),
         const SizedBox(width: 8),
@@ -357,7 +357,7 @@ class _SpeedControl extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: isActive
-                      ? VaxpColors.secondary.withOpacity(0.25)
+                      ? VaxpColors.secondary.withValues(alpha: 0.25)
                       : Colors.transparent,
                 ),
                 child: Text(
@@ -367,7 +367,7 @@ class _SpeedControl extends StatelessWidget {
                     fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
                     color: isActive
                         ? VaxpColors.secondary
-                        : Colors.white.withOpacity(0.4),
+                        : Colors.white.withValues(alpha: 0.4),
                   ),
                 ),
               ),

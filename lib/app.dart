@@ -175,9 +175,8 @@ class _SideNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 72,
-      
       child: Column(
         children: [
           const SizedBox(height: 8),
@@ -199,7 +198,7 @@ class _SideNav extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: isSelected
-                          ? VaxpColors.secondary.withOpacity(0.15)
+                          ? VaxpColors.secondary.withValues(alpha: 0.15)
                           : Colors.transparent,
                     ),
                     child: Column(
@@ -210,7 +209,7 @@ class _SideNav extends StatelessWidget {
                           size: 22,
                           color: isSelected
                               ? VaxpColors.secondary
-                              : Colors.white.withOpacity(0.4),
+                              : Colors.white.withValues(alpha: 0.4),
                         ),
                         const SizedBox(height: 2),
                         Text(
@@ -219,7 +218,7 @@ class _SideNav extends StatelessWidget {
                             fontSize: 9,
                             color: isSelected
                                 ? VaxpColors.secondary
-                                : Colors.white.withOpacity(0.3),
+                                : Colors.white.withValues(alpha: 0.3),
                           ),
                         ),
                       ],

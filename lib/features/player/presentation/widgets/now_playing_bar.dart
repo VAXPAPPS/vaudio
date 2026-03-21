@@ -49,8 +49,8 @@ class NowPlayingBar extends StatelessWidget {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            VaxpColors.secondary.withOpacity(0.5),
-                            VaxpColors.primary.withOpacity(0.8),
+                            VaxpColors.secondary.withValues(alpha: 0.5),
+                            VaxpColors.primary.withValues(alpha: 0.8),
                           ],
                         ),
                       ),
@@ -92,7 +92,7 @@ class NowPlayingBar extends StatelessWidget {
                             track.artist,
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -107,7 +107,7 @@ class NowPlayingBar extends StatelessWidget {
                       '${_formatDuration(playback.position)} / ${_formatDuration(playback.duration)}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         fontFeatures: const [FontFeature.tabularFigures()],
                       ),
                     ),
@@ -161,7 +161,7 @@ class _MiniSeekBar extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   VaxpColors.secondary,
-                  VaxpColors.secondary.withOpacity(0.6),
+                  VaxpColors.secondary.withValues(alpha: 0.6),
                 ],
               ),
             ),
@@ -191,7 +191,7 @@ class _PlaybackControls extends StatelessWidget {
             size: 18,
             color: playback.isShuffled
                 ? VaxpColors.secondary
-                : Colors.white.withOpacity(0.5),
+                : Colors.white.withValues(alpha: 0.5),
           ),
           onPressed: () => bloc.add(ShuffleToggled()),
           splashRadius: 18,
@@ -210,7 +210,7 @@ class _PlaybackControls extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: VaxpColors.secondary.withOpacity(0.3),
+            color: VaxpColors.secondary.withValues(alpha: 0.3),
           ),
           child: IconButton(
             icon: Icon(
@@ -246,7 +246,7 @@ class _PlaybackControls extends StatelessWidget {
             size: 18,
             color: playback.repeatMode != RepeatMode.off
                 ? VaxpColors.secondary
-                : Colors.white.withOpacity(0.5),
+                : Colors.white.withValues(alpha: 0.5),
           ),
           onPressed: () => bloc.add(RepeatModeChanged()),
           splashRadius: 18,
@@ -277,7 +277,7 @@ class _VolumeWidget extends StatelessWidget {
                     ? Icons.volume_down_rounded
                     : Icons.volume_up_rounded,
             size: 18,
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha: 0.6),
           ),
           onPressed: () => bloc.add(MuteToggled()),
           splashRadius: 16,
@@ -291,7 +291,7 @@ class _VolumeWidget extends StatelessWidget {
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
               activeTrackColor: VaxpColors.secondary,
-              inactiveTrackColor: Colors.white.withOpacity(0.1),
+              inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
               thumbColor: VaxpColors.secondary,
             ),
             child: Slider(

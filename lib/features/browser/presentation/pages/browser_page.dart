@@ -36,7 +36,7 @@ class BrowserPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.error_outline, size: 48, color: Colors.red.withOpacity(0.7)),
+                Icon(Icons.error_outline, size: 48, color: Colors.red.withValues(alpha: 0.7)),
                 const SizedBox(height: 16),
                 Text('Error: ${state.message}'),
                 const SizedBox(height: 16),
@@ -68,13 +68,13 @@ class BrowserPage extends StatelessWidget {
                           Icon(
                             Icons.folder_open_rounded,
                             size: 64,
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'No audio files found',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.4),
+                              color: Colors.white.withValues(alpha: 0.4),
                               fontSize: 16,
                             ),
                           ),
@@ -157,7 +157,7 @@ class _BreadcrumbBar extends StatelessWidget {
                     Icon(
                       Icons.chevron_right_rounded,
                       size: 16,
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                     ),
                     _BreadcrumbItem(
                       label: parts[i],
@@ -201,7 +201,7 @@ class _BreadcrumbItem extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             fontWeight: isLast ? FontWeight.w600 : FontWeight.normal,
-            color: isLast ? Colors.white : Colors.white.withOpacity(0.5),
+            color: isLast ? Colors.white : Colors.white.withValues(alpha: 0.5),
           ),
         ),
       ),
@@ -243,8 +243,8 @@ class _AudioFileTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: file.isDirectory
-                      ? Colors.amber.withOpacity(0.15)
-                      : VaxpColors.secondary.withOpacity(0.1),
+                      ? Colors.amber.withValues(alpha: 0.15)
+                      : VaxpColors.secondary.withValues(alpha: 0.1),
                 ),
                 child: Icon(
                   file.isDirectory
@@ -275,7 +275,7 @@ class _AudioFileTile extends StatelessWidget {
                         '${file.extension.toUpperCase()} • ${_formatSize(file.size)}',
                         style: TextStyle(
                           fontSize: 11,
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: 0.4),
                         ),
                       ),
                   ],
@@ -294,7 +294,7 @@ class _AudioFileTile extends StatelessWidget {
                             : Icons.play_circle_outline_rounded,
                         color: isPlaying
                             ? VaxpColors.secondary
-                            : Colors.white.withOpacity(0.3),
+                            : Colors.white.withValues(alpha: 0.3),
                         size: 24,
                       ),
                       onPressed: () => _onTap(context),
@@ -305,7 +305,7 @@ class _AudioFileTile extends StatelessWidget {
               else
                 Icon(
                   Icons.chevron_right_rounded,
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withValues(alpha: 0.3),
                 ),
             ],
           ),
