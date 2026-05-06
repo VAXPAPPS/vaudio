@@ -26,7 +26,8 @@ Future<void> main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(
-    size: Size(1100, 750),
+    size: Size(430, 860),
+    minimumSize: Size(360, 720),
     center: true,
     titleBarStyle: TitleBarStyle.hidden,
     title: 'Vaxp Audio',

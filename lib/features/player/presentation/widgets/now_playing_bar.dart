@@ -24,101 +24,121 @@ class NowPlayingBar extends StatelessWidget {
         final track = state.currentTrack;
         final playback = state.playbackState;
 
-        return Container(
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(0, 0, 0, 0),
-            
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // شريط التقدم العلوي (رفيع)
-              _MiniSeekBar(playback: playback),
-              // المحتوى الرئيسي
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  children: [
-                    // أيقونة الموسيقى
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            VaxpColors.secondary.withValues(alpha: 0.5),
-                            VaxpColors.primary.withValues(alpha: 0.8),
-                          ],
-                        ),
-                      ),
-                      child: const Icon(Icons.music_note_rounded, color: Colors.white, size: 24),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isCompact = constraints.maxWidth < 560;
+
+            return Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(0, 0, 0, 0),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // شريط التقدم العلوي (رفيع)
+                  _MiniSeekBar(playback: playback),
+                  // المحتوى الرئيسي
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isCompact ? 12 : 16,
+                      vertical: 8,
                     ),
-                    const SizedBox(width: 12),
-                    // معلومات المسار
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            height: 20,
-                            child: track.title.length > 30
-                                ? Marquee(
-                                    text: track.title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                    scrollAxis: Axis.horizontal,
-                                    blankSpace: 60,
-                                    velocity: 30,
-                                    pauseAfterRound: const Duration(seconds: 2),
-                                  )
-                                : Text(
-                                    track.title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                    child: Row(
+                      children: [
+                        // أيقونة الموسيقى
+                        Container(
+                          width: isCompact ? 42 : 48,
+                          height: isCompact ? 42 : 48,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                VaxpColors.secondary.withValues(alpha: 0.5),
+                                VaxpColors.primary.withValues(alpha: 0.8),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 2),
+                          child: const Icon(
+                            Icons.music_note_rounded,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // معلومات المسار
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                                child: track.title.length > 30
+                                    ? Marquee(
+                                        text: track.title,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                        scrollAxis: Axis.horizontal,
+                                        blankSpace: 60,
+                                        velocity: 30,
+                                        pauseAfterRound: const Duration(
+                                          seconds: 2,
+                                        ),
+                                      )
+                                    : Text(
+                                        track.title,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                track.artist,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        // أزرار التحكم الرئيسية
+                        isCompact
+                            ? _CompactPlaybackControls(playback: playback)
+                            : _PlaybackControls(playback: playback),
+                        if (!isCompact) ...[
+                          const SizedBox(width: 16),
+                          // الوقت
                           Text(
-                            track.artist,
+                            '${_formatDuration(playback.position)} / ${_formatDuration(playback.duration)}',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white.withValues(alpha: 0.5),
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
+                          const SizedBox(width: 16),
+                          // التحكم بالصوت
+                          _VolumeWidget(playback: playback),
                         ],
-                      ),
+                      ],
                     ),
-                    // أزرار التحكم الرئيسية
-                    _PlaybackControls(playback: playback),
-                    const SizedBox(width: 16),
-                    // الوقت
-                    Text(
-                      '${_formatDuration(playback.position)} / ${_formatDuration(playback.duration)}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white.withValues(alpha: 0.5),
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    // التحكم بالصوت
-                    _VolumeWidget(playback: playback),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -156,7 +176,10 @@ class _MiniSeekBar extends StatelessWidget {
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             height: 3,
-            width: (MediaQuery.of(context).size.width * progress).clamp(0, double.infinity),
+            width: (MediaQuery.of(context).size.width * progress).clamp(
+              0,
+              double.infinity,
+            ),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -168,6 +191,44 @@ class _MiniSeekBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// أزرار تشغيل مختصرة حتى لا يزدحم الشريط على عرض الهاتف
+class _CompactPlaybackControls extends StatelessWidget {
+  final PlaybackState playback;
+  const _CompactPlaybackControls({required this.playback});
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<PlayerBloc>();
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: Icon(
+            playback.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+            size: 28,
+          ),
+          onPressed: () {
+            if (playback.isPlaying) {
+              bloc.add(PauseRequested());
+            } else {
+              bloc.add(ResumeRequested());
+            }
+          },
+          splashRadius: 22,
+          tooltip: playback.isPlaying ? 'Pause' : 'Play',
+        ),
+        IconButton(
+          icon: const Icon(Icons.skip_next_rounded, size: 26),
+          onPressed: () => bloc.add(NextRequested()),
+          splashRadius: 22,
+          tooltip: 'Next',
+        ),
+      ],
     );
   }
 }
@@ -274,8 +335,8 @@ class _VolumeWidget extends StatelessWidget {
             playback.isMuted || playback.volume == 0
                 ? Icons.volume_off_rounded
                 : playback.volume < 0.5
-                    ? Icons.volume_down_rounded
-                    : Icons.volume_up_rounded,
+                ? Icons.volume_down_rounded
+                : Icons.volume_up_rounded,
             size: 18,
             color: Colors.white.withValues(alpha: 0.6),
           ),

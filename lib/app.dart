@@ -70,28 +70,21 @@ class _AudioPlayerShellState extends State<_AudioPlayerShell> {
       onKeyEvent: _handleKeyboard,
       child: VenomScaffold(
         title: 'Venom Audio',
-        body: Row(
+        body: Column(
           children: [
-            // الشريط الجانبي
-            _SideNav(
+            // المحتوى الرئيسي
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: _pages[_selectedIndex],
+              ),
+            ),
+            // شريط التشغيل السفلي
+            const NowPlayingBar(),
+            _BottomNav(
               items: _navItems,
               selectedIndex: _selectedIndex,
               onSelected: (index) => setState(() => _selectedIndex = index),
-            ),
-            // المحتوى الرئيسي
-            Expanded(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: _pages[_selectedIndex],
-                    ),
-                  ),
-                  // شريط التشغيل السفلي
-                  const NowPlayingBar(),
-                ],
-              ),
             ),
           ],
         ),
@@ -117,14 +110,18 @@ class _AudioPlayerShellState extends State<_AudioPlayerShell> {
         break;
       case LogicalKeyboardKey.arrowRight:
         if (state is ps.PlayerActive) {
-          final newPos = state.playbackState.position + const Duration(seconds: 5);
+          final newPos =
+              state.playbackState.position + const Duration(seconds: 5);
           bloc.add(SeekRequested(newPos));
         }
         break;
       case LogicalKeyboardKey.arrowLeft:
         if (state is ps.PlayerActive) {
-          final newPos = state.playbackState.position - const Duration(seconds: 5);
-          bloc.add(SeekRequested(newPos < Duration.zero ? Duration.zero : newPos));
+          final newPos =
+              state.playbackState.position - const Duration(seconds: 5);
+          bloc.add(
+            SeekRequested(newPos < Duration.zero ? Duration.zero : newPos),
+          );
         }
         break;
       case LogicalKeyboardKey.arrowUp:
@@ -161,13 +158,13 @@ class _NavItem {
   const _NavItem(this.icon, this.label);
 }
 
-/// الشريط الجانبي
-class _SideNav extends StatelessWidget {
+/// شريط التنقل السفلي للمقاسات الشبيهة بالهاتف
+class _BottomNav extends StatelessWidget {
   final List<_NavItem> items;
   final int selectedIndex;
   final ValueChanged<int> onSelected;
 
-  const _SideNav({
+  const _BottomNav({
     required this.items,
     required this.selectedIndex,
     required this.onSelected,
@@ -175,60 +172,81 @@ class _SideNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 72,
-      child: Column(
-        children: [
-          const SizedBox(height: 8),
-          ...List.generate(items.length, (i) {
-            final item = items[i];
-            final isSelected = i == selectedIndex;
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Tooltip(
-                message: item.label,
-                preferBelow: false,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () => onSelected(i),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: 52,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: isSelected
-                          ? VaxpColors.secondary.withValues(alpha: 0.15)
-                          : Colors.transparent,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          item.icon,
-                          size: 22,
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+      child: VaxpGlass(
+        blur: 22,
+        opacity: 0.18,
+        radius: BorderRadius.circular(24),
+        child: Container(
+          height: 72,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: Row(
+            children: List.generate(items.length, (i) {
+              final item = items[i];
+              final isSelected = i == selectedIndex;
+
+              return Expanded(
+                child: Tooltip(
+                  message: item.label,
+                  preferBelow: false,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: () => onSelected(i),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeOutCubic,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: isSelected
+                            ? VaxpColors.secondary.withValues(alpha: 0.18)
+                            : Colors.transparent,
+                        border: Border.all(
                           color: isSelected
-                              ? VaxpColors.secondary
-                              : Colors.white.withValues(alpha: 0.4),
+                              ? VaxpColors.secondary.withValues(alpha: 0.35)
+                              : Colors.transparent,
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          item.label,
-                          style: TextStyle(
-                            fontSize: 9,
-                            color: isSelected
-                                ? VaxpColors.secondary
-                                : Colors.white.withValues(alpha: 0.3),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedScale(
+                            duration: const Duration(milliseconds: 220),
+                            scale: isSelected ? 1.08 : 1.0,
+                            child: Icon(
+                              item.icon,
+                              size: 24,
+                              color: isSelected
+                                  ? VaxpColors.secondary
+                                  : Colors.white.withValues(alpha: 0.45),
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 4),
+                          Text(
+                            item.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: isSelected
+                                  ? Colors.white.withValues(alpha: 0.9)
+                                  : Colors.white.withValues(alpha: 0.38),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }),
-        ],
+              );
+            }),
+          ),
+        ),
       ),
     );
   }
