@@ -8,6 +8,9 @@ import '../../../player/domain/entities/audio_track.dart';
 import '../../../player/presentation/bloc/player_bloc.dart';
 import '../../../player/presentation/bloc/player_event.dart';
 import '../../../player/presentation/bloc/player_state.dart' as ps;
+import '../../../playlist/presentation/bloc/playlist_bloc.dart';
+import '../../../playlist/presentation/bloc/playlist_event.dart';
+import '../../../playlist/presentation/bloc/playlist_state.dart';
 import '../bloc/browser_bloc.dart';
 import '../bloc/browser_event.dart';
 import '../bloc/browser_state.dart';
@@ -36,12 +39,17 @@ class BrowserPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.error_outline, size: 48, color: Colors.red.withValues(alpha: 0.7)),
+                Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: Colors.red.withValues(alpha: 0.7),
+                ),
                 const SizedBox(height: 16),
                 Text('Error: ${state.message}'),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => context.read<BrowserBloc>().add(BrowserInitialize()),
+                  onPressed: () =>
+                      context.read<BrowserBloc>().add(BrowserInitialize()),
                   child: const Text('Retry'),
                 ),
               ],
@@ -82,7 +90,10 @@ class BrowserPage extends StatelessWidget {
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       itemCount: loaded.items.length,
                       itemBuilder: (context, index) {
                         return _AudioFileTile(
@@ -105,10 +116,7 @@ class _BreadcrumbBar extends StatelessWidget {
   final String currentPath;
   final bool canGoBack;
 
-  const _BreadcrumbBar({
-    required this.currentPath,
-    required this.canGoBack,
-  });
+  const _BreadcrumbBar({required this.currentPath, required this.canGoBack});
 
   @override
   Widget build(BuildContext context) {
@@ -231,9 +239,7 @@ class _AudioFileTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           margin: const EdgeInsets.symmetric(vertical: 2),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           child: Row(
             children: [
               // أيقونة
@@ -250,9 +256,7 @@ class _AudioFileTile extends StatelessWidget {
                   file.isDirectory
                       ? Icons.folder_rounded
                       : _getFileIcon(file.extension),
-                  color: file.isDirectory
-                      ? Colors.amber
-                      : VaxpColors.secondary,
+                  color: file.isDirectory ? Colors.amber : VaxpColors.secondary,
                   size: 22,
                 ),
               ),
@@ -283,24 +287,41 @@ class _AudioFileTile extends StatelessWidget {
               ),
               // أيقونة التشغيل/الدخول
               if (!file.isDirectory)
-                BlocBuilder<PlayerBloc, ps.PlayerState>(
-                  builder: (context, state) {
-                    final isPlaying = state is ps.PlayerActive &&
-                        state.currentTrack.filePath == file.path;
-                    return IconButton(
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
                       icon: Icon(
-                        isPlaying
-                            ? Icons.equalizer_rounded
-                            : Icons.play_circle_outline_rounded,
-                        color: isPlaying
-                            ? VaxpColors.secondary
-                            : Colors.white.withValues(alpha: 0.3),
+                        Icons.playlist_add_rounded,
+                        color: Colors.white.withValues(alpha: 0.36),
                         size: 24,
                       ),
-                      onPressed: () => _onTap(context),
+                      onPressed: () => _showAddToPlaylistSheet(context),
                       splashRadius: 18,
-                    );
-                  },
+                      tooltip: 'Add to Playlist',
+                    ),
+                    BlocBuilder<PlayerBloc, ps.PlayerState>(
+                      builder: (context, state) {
+                        final isPlaying =
+                            state is ps.PlayerActive &&
+                            state.currentTrack.filePath == file.path;
+                        return IconButton(
+                          icon: Icon(
+                            isPlaying
+                                ? Icons.equalizer_rounded
+                                : Icons.play_circle_outline_rounded,
+                            color: isPlaying
+                                ? VaxpColors.secondary
+                                : Colors.white.withValues(alpha: 0.3),
+                            size: 24,
+                          ),
+                          onPressed: () => _onTap(context),
+                          splashRadius: 18,
+                          tooltip: isPlaying ? 'Playing' : 'Play',
+                        );
+                      },
+                    ),
+                  ],
                 )
               else
                 Icon(
@@ -314,20 +335,176 @@ class _AudioFileTile extends StatelessWidget {
     );
   }
 
+  void _showAddToPlaylistSheet(BuildContext context) {
+    final playlistBloc = context.read<PlaylistBloc>();
+    if (playlistBloc.state is PlaylistInitial) {
+      playlistBloc.add(LoadPlaylists());
+    }
+
+    final track = _toTrack(file);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: VaxpColors.glassSurface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: BlocBuilder<PlaylistBloc, PlaylistState>(
+              bloc: playlistBloc,
+              builder: (context, state) {
+                if (state is PlaylistInitial || state is PlaylistLoading) {
+                  return const SizedBox(
+                    height: 180,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (state is PlaylistError) {
+                  return SizedBox(
+                    height: 180,
+                    child: Center(child: Text('Error: ${state.message}')),
+                  );
+                }
+
+                final playlists = (state as PlaylistLoaded).playlists;
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.playlist_add_rounded, size: 22),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Add "${track.title}" to',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (playlists.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        child: Center(
+                          child: Text(
+                            'Create a playlist first',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.45),
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      Flexible(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: playlists.length,
+                          itemBuilder: (context, index) {
+                            final playlist = playlists[index];
+                            final alreadyAdded = playlist.tracks.any(
+                              (item) => item.id == track.id,
+                            );
+
+                            return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: VaxpColors.secondary.withValues(
+                                    alpha: 0.14,
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.queue_music_rounded,
+                                  size: 22,
+                                ),
+                              ),
+                              title: Text(
+                                playlist.name,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Text(
+                                alreadyAdded
+                                    ? 'Already added'
+                                    : '${playlist.tracks.length} tracks',
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.4),
+                                ),
+                              ),
+                              trailing: Icon(
+                                alreadyAdded
+                                    ? Icons.check_circle_rounded
+                                    : Icons.add_circle_outline_rounded,
+                                color: alreadyAdded
+                                    ? VaxpColors.secondary
+                                    : Colors.white.withValues(alpha: 0.42),
+                              ),
+                              enabled: !alreadyAdded,
+                              onTap: alreadyAdded
+                                  ? null
+                                  : () {
+                                      playlistBloc.add(
+                                        AddTrackToPlaylist(playlist.id, track),
+                                      );
+                                      Navigator.of(sheetContext).pop();
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Added to ${playlist.name}',
+                                          ),
+                                          duration: const Duration(seconds: 2),
+                                        ),
+                                      );
+                                    },
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _onTap(BuildContext context) {
     if (file.isDirectory) {
       context.read<BrowserBloc>().add(NavigateToDir(file.path));
     } else {
       // تشغيل الملف + تعيين كل ملفات الصوت كقائمة انتظار
       final audioFiles = allFiles.where((f) => !f.isDirectory).toList();
-      final tracks = audioFiles.map((f) => AudioTrack(
-        id: f.path,
-        title: p.basenameWithoutExtension(f.name),
-        filePath: f.path,
-      )).toList();
+      final tracks = audioFiles.map(_toTrack).toList();
       final audioIndex = audioFiles.indexWhere((f) => f.path == file.path);
       context.read<PlayerBloc>().add(QueueSet(tracks, startIndex: audioIndex));
     }
+  }
+
+  AudioTrack _toTrack(AudioFile audioFile) {
+    return AudioTrack(
+      id: audioFile.path,
+      title: p.basenameWithoutExtension(audioFile.name),
+      filePath: audioFile.path,
+    );
   }
 
   IconData _getFileIcon(String ext) {
