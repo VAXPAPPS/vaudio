@@ -7,7 +7,7 @@ import '../../../../core/theme/vaxp_theme.dart';
 import '../bloc/player_bloc.dart';
 import '../bloc/player_event.dart';
 import '../bloc/player_state.dart' as ps;
-import '../../domain/entities/playback_state.dart';
+import '../../domain/entities/playback_state.dart' as pb;
 
 /// شريط التشغيل السفلي — Now Playing Bar
 class NowPlayingBar extends StatelessWidget {
@@ -153,7 +153,7 @@ class NowPlayingBar extends StatelessWidget {
 
 /// شريط التقدم المصغر (أعلى NowPlayingBar)
 class _MiniSeekBar extends StatelessWidget {
-  final PlaybackState playback;
+  final pb.PlaybackState playback;
   const _MiniSeekBar({required this.playback});
 
   @override
@@ -197,7 +197,7 @@ class _MiniSeekBar extends StatelessWidget {
 
 /// أزرار تشغيل مختصرة حتى لا يزدحم الشريط على عرض الهاتف
 class _CompactPlaybackControls extends StatelessWidget {
-  final PlaybackState playback;
+  final pb.PlaybackState playback;
   const _CompactPlaybackControls({required this.playback});
 
   @override
@@ -235,7 +235,7 @@ class _CompactPlaybackControls extends StatelessWidget {
 
 /// أزرار التحكم بالتشغيل
 class _PlaybackControls extends StatelessWidget {
-  final PlaybackState playback;
+  final pb.PlaybackState playback;
   const _PlaybackControls({required this.playback});
 
   @override
@@ -301,11 +301,11 @@ class _PlaybackControls extends StatelessWidget {
         // Repeat
         IconButton(
           icon: Icon(
-            playback.repeatMode == RepeatMode.one
+            playback.repeatMode == pb.RepeatMode.one
                 ? Icons.repeat_one_rounded
                 : Icons.repeat_rounded,
             size: 18,
-            color: playback.repeatMode != RepeatMode.off
+            color: playback.repeatMode != pb.RepeatMode.off
                 ? VaxpColors.secondary
                 : Colors.white.withValues(alpha: 0.5),
           ),
@@ -320,7 +320,7 @@ class _PlaybackControls extends StatelessWidget {
 
 /// ويدجت التحكم بالصوت
 class _VolumeWidget extends StatelessWidget {
-  final PlaybackState playback;
+  final pb.PlaybackState playback;
   const _VolumeWidget({required this.playback});
 
   @override

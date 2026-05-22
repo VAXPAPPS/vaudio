@@ -5,7 +5,7 @@ import '../../../../core/theme/vaxp_theme.dart';
 import '../bloc/player_bloc.dart';
 import '../bloc/player_event.dart';
 import '../bloc/player_state.dart' as ps;
-import '../../domain/entities/playback_state.dart';
+import '../../domain/entities/playback_state.dart' as pb;
 import '../widgets/ambient_visualizer.dart';
 
 /// صفحة Now Playing الكاملة
@@ -158,7 +158,7 @@ class _AlbumArt extends StatelessWidget {
 
 /// شريط التقدم الكامل
 class _FullSeekBar extends StatelessWidget {
-  final PlaybackState playback;
+  final pb.PlaybackState playback;
   const _FullSeekBar({required this.playback});
 
   @override
@@ -226,7 +226,7 @@ class _FullSeekBar extends StatelessWidget {
 
 /// أزرار التحكم الكبيرة
 class _LargeControls extends StatelessWidget {
-  final PlaybackState playback;
+  final pb.PlaybackState playback;
   const _LargeControls({required this.playback});
 
   @override
@@ -306,11 +306,11 @@ class _LargeControls extends StatelessWidget {
         // Repeat
         IconButton(
           icon: Icon(
-            playback.repeatMode == RepeatMode.one
+            playback.repeatMode == pb.RepeatMode.one
                 ? Icons.repeat_one_rounded
                 : Icons.repeat_rounded,
             size: 22,
-            color: playback.repeatMode != RepeatMode.off
+            color: playback.repeatMode != pb.RepeatMode.off
                 ? VaxpColors.secondary
                 : Colors.white.withValues(alpha: 0.4),
           ),
@@ -324,7 +324,7 @@ class _LargeControls extends StatelessWidget {
 
 /// التحكم بالسرعة
 class _SpeedControl extends StatelessWidget {
-  final PlaybackState playback;
+  final pb.PlaybackState playback;
   const _SpeedControl({required this.playback});
 
   static const _speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
