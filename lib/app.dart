@@ -101,7 +101,7 @@ class _AudioPlayerShellState extends State<_AudioPlayerShell> {
               ),
             ),
             // شريط التشغيل السفلي
-            const NowPlayingBar(),
+            if (_selectedIndex != 1) const NowPlayingBar(),
             _BottomNav(
               items: _navItems,
               selectedIndex: _selectedIndex,
