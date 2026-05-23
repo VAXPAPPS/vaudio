@@ -6,6 +6,6 @@ Comment=Flutter Application - vaudio
 Exec=/usr/bin/vaudio
 Icon=/usr/share/icons/hicolor/256x256/apps/vaudio.png
 Terminal=false
-Categories=Utility;Development;
+Categories=AudioVideo;Audio;Player;
 Keywords=audio;music;player;sound;mp3;
 MimeType=audio/mpeg;audio/ogg;audio/flac;audio/wav;audio/aac;
