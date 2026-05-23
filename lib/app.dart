@@ -16,9 +16,13 @@ import '../features/playlist/presentation/bloc/playlist_bloc.dart';
 import '../features/playlist/presentation/pages/playlist_page.dart';
 import '../features/settings/presentation/pages/settings_page.dart';
 
+import 'package:path/path.dart' as p;
+import '../features/player/domain/entities/audio_track.dart';
+
 /// التطبيق الرئيسي مع BLoC Providers
 class VenomAudioApp extends StatelessWidget {
-  const VenomAudioApp({super.key});
+  final String? initialAudioPath;
+  const VenomAudioApp({super.key, this.initialAudioPath});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,7 @@ class VenomAudioApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Venom Audio',
         theme: VaxpTheme.dark,
-        home: const _AudioPlayerShell(),
+        home: _AudioPlayerShell(initialAudioPath: initialAudioPath),
       ),
     );
   }
@@ -40,7 +44,8 @@ class VenomAudioApp extends StatelessWidget {
 
 /// الهيكل الرئيسي للتطبيق
 class _AudioPlayerShell extends StatefulWidget {
-  const _AudioPlayerShell();
+  final String? initialAudioPath;
+  const _AudioPlayerShell({this.initialAudioPath});
 
   @override
   State<_AudioPlayerShell> createState() => _AudioPlayerShellState();
@@ -48,6 +53,22 @@ class _AudioPlayerShell extends StatefulWidget {
 
 class _AudioPlayerShellState extends State<_AudioPlayerShell> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialAudioPath != null) {
+      _selectedIndex = 1; // Switch to NowPlayingPage
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final track = AudioTrack(
+          id: widget.initialAudioPath!,
+          title: p.basenameWithoutExtension(widget.initialAudioPath!),
+          filePath: widget.initialAudioPath!,
+        );
+        context.read<PlayerBloc>().add(QueueSet([track], startIndex: 0));
+      });
+    }
+  }
 
   final _pages = const [
     BrowserPage(),

@@ -6,7 +6,9 @@ import 'core/colors/vaxp_colors.dart';
 import 'di/injection_container.dart';
 import 'app.dart';
 
-Future<void> main() async {
+import 'dart:io';
+
+Future<void> main(List<String> args) async {
   // Initialize Flutter bindings first
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -38,5 +40,13 @@ Future<void> main() async {
     await windowManager.focus();
   });
 
-  runApp(const VenomAudioApp());
+  String? injectedAudioPath;
+  if (args.isNotEmpty) {
+    injectedAudioPath = args.first;
+    if (!File(injectedAudioPath).existsSync()) {
+      injectedAudioPath = null;
+    }
+  }
+
+  runApp(VenomAudioApp(initialAudioPath: injectedAudioPath));
 }
